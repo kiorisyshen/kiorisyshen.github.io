@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Neural Network II Architecture &amp; Perceptrons | Kio's Spot</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.2"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Neural Network II Architecture &amp; Perceptrons</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Neural Network II Architecture &amp; Perceptrons</h1><div class="post-meta">Mar 29, 2016<span> | </span><span class="category"><a href="/categories/Machine-Learning/">Machine Learning</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/03/29/Neural Network II Architecture &amp; Perceptrons/" href="/2016/03/29/Neural Network II Architecture &amp; Perceptrons/#disqus_thread"></a><div class="post-content"><p>This is a note for learning Neural Network in Machine Learning based on this <a href="https://www.coursera.org/course/neuralnets" target="_blank" rel="noopener">course</a> on <a href="https://www.coursera.org" target="_blank" rel="noopener">Coursera</a>.</p>
+<h2 id="An-overview-of-the-main-types-of-neural-network-architecture"><a href="#An-overview-of-the-main-types-of-neural-network-architecture" class="headerlink" title="An overview of the main types of neural network architecture"></a>An overview of the main types of neural network architecture</h2><h3 id="1-Feed-forward-neural-networks"><a href="#1-Feed-forward-neural-networks" class="headerlink" title="1. Feed-forward neural networks"></a>1. Feed-forward neural networks</h3><ul>
+<li>The commonest type of neural network in practical applications</li>
+<li>If there is more than one hidden layer, we call them “deep” neural networks</li>
+<li>The activities of the neurons in each layer are a non-linear function of the activities in the layer blow<br><img src="Feed-forward NN.png" alt></li>
+</ul>
+<h3 id="2-Recurrent-networks"><a href="#2-Recurrent-networks" class="headerlink" title="2. Recurrent networks"></a>2. Recurrent networks</h3><ul>
+<li>Have directed cycles in their connection graph</li>
+<li>Powerful and biologically realistic, but very difficult to train</li>
+<li>Recurrent nets with multiple hidden layers are just a special case that has some of the hidden-&gt;hidden connections missing compare to the general recurrent network<br><img src="Recurrent networks.png" alt></li>
+<li>It is very natural way to model sequential data</li>
+<li>Have the ability to remember information for quite a long time<br><img src="Sequential framework.png" alt></li>
+<li>An exciting example: Ilya Sutskever (2011), trained a special recurrent NN to predict the next character in a sequence, after training for a long time on a string of half a billion characters from English Wikipedia, and made it generate a new text by predicting the probability distribution for the next character and then sampling a character from this distribution. The result is quite reasonable with great syntax. <a href="http://www.cs.toronto.edu/~ilya/rnn.html" target="_blank" rel="noopener">Demo</a>.</li>
+</ul>
+<h2 id="Perceptrons"><a href="#Perceptrons" class="headerlink" title="Perceptrons"></a>Perceptrons</h2><h3 id="Standard-Perceptron-architecture"><a href="#Standard-Perceptron-architecture" class="headerlink" title="Standard Perceptron architecture"></a>Standard Perceptron architecture</h3><p><img src="Perceptron architecture.png" alt></p>
+<ul>
+<li>So the perceptron is just learning last hidden layer’s weight. It is linear, and can not learn features.</li>
+<li>Perceptron uses binary threshold neuron as its final last output layer.</li>
+</ul>
+<h3 id="Learning-procedure"><a href="#Learning-procedure" class="headerlink" title="Learning procedure"></a>Learning procedure</h3><ul>
+<li>Pick training cases using any policy that ensures that every training case will keep getting picked.</li>
+<li>If the output unit is correct, leave its weights alone.</li>
+<li>If the output unit incorrectly outputs a zero, add the input vector to the weight vector.</li>
+<li>If the output unit incorrectly outputs a 1, subtract the input vector from the weight vector.<br><img src="Perceptron cone.png" alt></li>
+</ul>
+<h3 id="What-perceptrons-can’t-do"><a href="#What-perceptrons-can’t-do" class="headerlink" title="What perceptrons can’t do"></a>What perceptrons can’t do</h3><h4 id="First-example-XOR"><a href="#First-example-XOR" class="headerlink" title="First example: XOR"></a>First example: XOR</h4><p>Positive cases: (1,1) → 1; (0,0) → 1;<br>Negative cases: (1,0) → 0; (0,1) → 0;<br><img src="Perceptron XOR.png" alt><br>Also it can be proved in a geometric view:<br><img src="Perceptron XOR geo.png" alt></p>
+<h4 id="Second-example-Discriminating-patterns"><a href="#Second-example-Discriminating-patterns" class="headerlink" title="Second example: Discriminating patterns"></a>Second example: Discriminating patterns</h4><p>For two patterns like:<br><img src="Perceptron patterns.png" alt><br>If we treat every individual pixel as an input, than pattern A and B’s output function are the same.<br>The reason is that, if we do not apply preprocessing on the input feature, the perceptron cannot learn translation of patterns.</p>
+<p>So we must make NN to learn the inside features which is same to adding hidden units, but we need an efficient way to adapting all the weights.</p>
+</div><div class="tags"><a href="/tags/Learning-note/">Learning note</a><a href="/tags/Neural-Network/">Neural Network</a></div><div class="post-nav"><a class="pre" href="/2016/04/01/Neural Network III Backpropagation/">Neural Network III Backpropagation</a><a class="next" href="/2016/03/29/Neural Network I Overview/">Neural Network I Overview</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'http://kiorisyshen.github.io/2016/03/29/Neural Network II Architecture &amp; Perceptrons/';
+    this.page.identifier = '2016/03/29/Neural Network II Architecture &amp; Perceptrons/';
+    this.page.title = 'Neural Network II Architecture &amp; Perceptrons';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//kiosspot.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//kiosspot.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://kiosspot.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://kiorisyshen.github.io"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Computer-Graphics/">Computer Graphics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MVG/">MVG</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Coding-Note/" style="font-size: 15px;">Coding Note</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Container/" style="font-size: 15px;">Container</a> <a href="/tags/Learning-note/" style="font-size: 15px;">Learning note</a> <a href="/tags/Recommender-System/" style="font-size: 15px;">Recommender System</a> <a href="/tags/Neural-Network/" style="font-size: 15px;">Neural Network</a> <a href="/tags/OpenGL/" style="font-size: 15px;">OpenGL</a> <a href="/tags/C-Gaming/" style="font-size: 15px;">C++ Gaming</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//kiosspot.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://silentming.net/" title="SilentMing's Gensokyo" target="_blank">SilentMing's Gensokyo</a><ul></ul><a href="https://unlimitedcodeworks.xyz/" title="Unlimited Code Works" target="_blank">Unlimited Code Works</a><ul></ul><a href="https://blog.icehoney.me/" title="雪月秋水" target="_blank">雪月秋水</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">Kio's Spot.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.2" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.2" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.2"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.2"></script></div></body></html>

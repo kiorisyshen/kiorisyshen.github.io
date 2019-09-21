@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Neural Network III Backpropagation | Kio's Spot</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.2"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Neural Network III Backpropagation</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Neural Network III Backpropagation</h1><div class="post-meta">Apr 1, 2016<span> | </span><span class="category"><a href="/categories/Machine-Learning/">Machine Learning</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/04/01/Neural Network III Backpropagation/" href="/2016/04/01/Neural Network III Backpropagation/#disqus_thread"></a><div class="post-content"><p>This is a note for learning Neural Network in Machine Learning based on this <a href="https://www.coursera.org/course/neuralnets" target="_blank" rel="noopener">course</a> on <a href="https://www.coursera.org" target="_blank" rel="noopener">Coursera</a>.</p>
+<h2 id="Learning-weights-of-perceptron"><a href="#Learning-weights-of-perceptron" class="headerlink" title="Learning weights of perceptron"></a>Learning weights of perceptron</h2><p>Different to the learning procedure for perceptron in the post before, here is a new way for learning. Instead of showing the weights get closer to a good set of weights, show that the actual output values get closer the target values.</p>
+<p>The advantage of this method is that it is the fundamentals towards building a learning algorithm for multiple layers neural network.</p>
+<h3 id="linear-neuron"><a href="#linear-neuron" class="headerlink" title="linear neuron"></a>linear neuron</h3><p>This is the batch delta rule for changing weights.<br>Definition:$$y=\sum_{i}w_i x_i$$</p>
+<p>x is input vector, y is output, w is weight vector. The definition of the squared error:$$E=\frac{1}{2}\sum_{n\in{training}}(t_n-y_n)^2$$</p>
+<p>t is the target value for each training case. So, we need to derive the value of gradient $\frac{\partial E}{\partial w_i}$, So, $$\frac{\partial{E}}{\partial{w_i}} = \frac{1}{2}\sum_{n\in{training}}\frac{\partial y_n}{\partial w_i}\frac{dE_n}{dy_n} = -\sum_{n\in{training}}x_{i(n)}(t_n-y_n)$$ Then we add a learning rate $\epsilon$ to the small change on w:$$\Delta w_i = -\epsilon\frac{\partial E}{\partial w_i}=\sum_{n\in{training}}\epsilon x_{i(n)}(t_n-y_n)$$</p>
+<h3 id="Logistic-neuron"><a href="#Logistic-neuron" class="headerlink" title="Logistic neuron"></a>Logistic neuron</h3><p>Definition:<br>$$y=\sum_{i}w_i x_i$$$$y=\frac{1}{1+e^{-\beta z}}\Rightarrow \frac{dy}{dz} = y(1-y)$$$$E=\frac{1}{2}\sum_{n\in{training}}(t_n-y_n)^2$$ So,<br>$$\frac{\partial{E}}{\partial{w_i}} = \sum_n\frac{\partial y_n}{\partial w_i}\frac{\partial E}{\partial y_n} = \sum_n\frac{\partial z_n}{\partial w_i}\frac{dy_n}{dz_n}\frac{\partial E}{\partial y_n} = -\sum_n x_{i(n)}y_n(1-y_n)(t_n-y_n)$$</p>
+<h2 id="Backpropagation-algorithm"><a href="#Backpropagation-algorithm" class="headerlink" title="Backpropagation algorithm"></a>Backpropagation algorithm</h2><p>In order to get nonlinear function for the NN and make machine to learn the feature, we need to add hidden layer to our NN framework. Thus we need an algorithm to adjust all hidden layers’ weights efficiently.</p>
+<p>The idea behind backpropagation is that though we don t know what the hidden units ought to do, but we can compute how fast the error changes as we change a hidden activity. Here is the procedure:<br><img src="Backpropagation.png" alt></p>
+<p><em>The j represent the current layer, the i represent the layer before current layer</em>. The definition of error function:<br>$$E=\frac{1}{2}\sum_{j\in{output}}(t_j-y_j)^2$$thus,</p>
+<p>$$\frac{\partial E}{\partial w_{ij}} = \frac{\partial z_j}{\partial w_{ij}}\frac{\partial E}{\partial z_j} = y_i \frac{\partial{E}}{\partial z_j} = y_i \frac{\partial y_j}{\partial z_j}\frac{\partial E}{\partial y_j} = y_i y_j(1-y_j)\frac{\partial E}{\partial y_j} = y_i y_j(1-y_j)[-(t_j-y_j)] $$</p>
+<p>For computing further layers, we need to derive $\frac{\partial E}{\partial y_i}$, so,<br>$$\frac{\partial E}{\partial y_i} = \sum_j \frac{dz_j}{dy_i}\frac{\partial E}{\partial z_j} = \sum_j w_{ij}\frac{\partial E}{\partial z_j} = \sum_j w_{ij}y_j(1-y_j)[-(t_j-y_j)]$$<br>Now, with $\frac{\partial E}{\partial y_i}$, we could do the iterate things back to layers close to input layers.</p>
+<h2 id="Issues-in-using-Backpropagation"><a href="#Issues-in-using-Backpropagation" class="headerlink" title="Issues in using Backpropagation"></a>Issues in using Backpropagation</h2><p>These two issue will be discussed in the later lectures.</p>
+<h3 id="Optimization-issues"><a href="#Optimization-issues" class="headerlink" title="Optimization issues"></a>Optimization issues</h3><p>How do we use the error derivatives on individual cases to discover a good set of weights?</p>
+<ul>
+<li>How often to update the weights<ul>
+<li>Online: after each training case.</li>
+<li>Full batch: after a full sweep through the training data.</li>
+<li>Mini-batch: after a small sample of training cases.</li>
+</ul>
+</li>
+<li>How much to update<ul>
+<li>Using fixed learning rate?</li>
+</ul>
+</li>
+</ul>
+<h3 id="Generalization-issues"><a href="#Generalization-issues" class="headerlink" title="Generalization issues"></a>Generalization issues</h3><p>How do we ensure that the learned weights work well for cases we did not see during training?</p>
+<ul>
+<li>Overfitting<ul>
+<li>Because a NN is flexible, so we need to prevent it to be overfitted.</li>
+<li>A large number of different methods to tackle this problem.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Supplement"><a href="#Supplement" class="headerlink" title="Supplement"></a>Supplement</h2><p>The backpropagation algorithm is improved by Hinton and other workers in 1985. See this paper for more details:<br>LEARNING INTERNAL REPRESENTATIONS BY ERROR PROPAGATION, David E. Ruineihart, Geoffrey E. Hinton, and Ronald J. Williams, September 1985, ICS Report 8506</p>
+</div><div class="tags"><a href="/tags/Learning-note/">Learning note</a><a href="/tags/Neural-Network/">Neural Network</a></div><div class="post-nav"><a class="pre" href="/2017/10/27/OpenGL Learning 01 Introduction/">OpenGL Learning 01 Introduction</a><a class="next" href="/2016/03/29/Neural Network II Architecture &amp; Perceptrons/">Neural Network II Architecture &amp; Perceptrons</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'http://kiorisyshen.github.io/2016/04/01/Neural Network III Backpropagation/';
+    this.page.identifier = '2016/04/01/Neural Network III Backpropagation/';
+    this.page.title = 'Neural Network III Backpropagation';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//kiosspot.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//kiosspot.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://kiosspot.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://kiorisyshen.github.io"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Computer-Graphics/">Computer Graphics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MVG/">MVG</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Coding-Note/" style="font-size: 15px;">Coding Note</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Container/" style="font-size: 15px;">Container</a> <a href="/tags/Learning-note/" style="font-size: 15px;">Learning note</a> <a href="/tags/Recommender-System/" style="font-size: 15px;">Recommender System</a> <a href="/tags/Neural-Network/" style="font-size: 15px;">Neural Network</a> <a href="/tags/OpenGL/" style="font-size: 15px;">OpenGL</a> <a href="/tags/C-Gaming/" style="font-size: 15px;">C++ Gaming</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//kiosspot.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://silentming.net/" title="SilentMing's Gensokyo" target="_blank">SilentMing's Gensokyo</a><ul></ul><a href="https://unlimitedcodeworks.xyz/" title="Unlimited Code Works" target="_blank">Unlimited Code Works</a><ul></ul><a href="https://blog.icehoney.me/" title="雪月秋水" target="_blank">雪月秋水</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">Kio's Spot.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.2" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.2" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.2"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.2"></script></div></body></html>

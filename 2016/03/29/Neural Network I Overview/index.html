@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Neural Network I Overview | Kio's Spot</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.2"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Neural Network I Overview</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Neural Network I Overview</h1><div class="post-meta">Mar 29, 2016<span> | </span><span class="category"><a href="/categories/Machine-Learning/">Machine Learning</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/03/29/Neural Network I Overview/" href="/2016/03/29/Neural Network I Overview/#disqus_thread"></a><div class="post-content"><p>This is a note for learning Neural Network in Machine Learning based on this <a href="https://www.coursera.org/course/neuralnets" target="_blank" rel="noopener">course</a> on <a href="https://www.coursera.org" target="_blank" rel="noopener">Coursera</a>.</p>
+<h2 id="Simple-Models-of-Neurons"><a href="#Simple-Models-of-Neurons" class="headerlink" title="Simple Models of Neurons"></a>Simple Models of Neurons</h2><p>Let y to be output, $\vec{x}$ to be input.</p>
+<ol>
+<li>Linear Neurons $$y=b+\sum_{i}x_{i}w_{i}$$</li>
+<li>Binary Threshold Neurons $$z=b+\sum_{i}x_{i}w_{i} , $$ $$y=\begin{cases} 1,&amp;if z\geq 0 \\ 0,&amp;otherwise \end{cases}$$</li>
+<li>Rectified Linear Neurons $$y=\begin{cases} z,&amp;if z&gt;0 \\ 0,&amp;otherwise \end{cases}$$</li>
+<li><em>Sigmoid Neurons</em> $$y=\frac{1}{1+e^{-\beta z}}$$<br><img src="Sigmoid.png" alt></li>
+<li><em>Stochastic Binary Neurons</em><br>Treat the output of the sigmoid function as the <em>probability</em> of producing a spike in a short time window.$$p(s=1)=\frac{1}{1+e^{-\beta z}}$$</li>
+</ol>
+<h2 id="Three-Types-of-Learning"><a href="#Three-Types-of-Learning" class="headerlink" title="Three Types of Learning"></a>Three Types of Learning</h2><h3 id="1-Supervised-learning"><a href="#1-Supervised-learning" class="headerlink" title="1. Supervised learning"></a>1. Supervised learning</h3><p>Learn to predict an output when given an input vector.</p>
+<ul>
+<li>Regression: The target output is a real number or a whole vector of<br>real numbers.<ul>
+<li>The price of a stock in 6 months time.</li>
+<li>The temperature at noon tomorrow.</li>
+</ul>
+</li>
+<li>Classification: The target output is a class label.<ul>
+<li>The simplest case is a choice between 1 and 0.</li>
+<li>We can also have multiple alternative labels.</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-Reinforcement-learning"><a href="#2-Reinforcement-learning" class="headerlink" title="2. Reinforcement learning"></a>2. Reinforcement learning</h3><p>The output is an action or sequence of actions, and our goal is to maximize the expected sum of the future rewards.It is difficult because the rewards are typically delayed so it is hard to know where we went wrong(or right).<br>This topic will not be covered in this course.</p>
+<h3 id="3-Unsupervised-learning"><a href="#3-Unsupervised-learning" class="headerlink" title="3. Unsupervised learning"></a>3. Unsupervised learning</h3><p>Discover a good internal representation of the input. It is hard to say what the aim of unsupervised learning is. The only one well-known branch is Clustering, though there remains lots of significant but unknown area in this topic.</p>
+</div><div class="tags"><a href="/tags/Learning-note/">Learning note</a><a href="/tags/Neural-Network/">Neural Network</a></div><div class="post-nav"><a class="pre" href="/2016/03/29/Neural Network II Architecture &amp; Perceptrons/">Neural Network II Architecture &amp; Perceptrons</a><a class="next" href="/2016/03/14/Introduction to Recommender Systems I/">Introduction to Recommender Systems I</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'http://kiorisyshen.github.io/2016/03/29/Neural Network I Overview/';
+    this.page.identifier = '2016/03/29/Neural Network I Overview/';
+    this.page.title = 'Neural Network I Overview';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//kiosspot.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//kiosspot.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://kiosspot.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://kiorisyshen.github.io"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Computer-Graphics/">Computer Graphics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MVG/">MVG</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Coding-Note/" style="font-size: 15px;">Coding Note</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Container/" style="font-size: 15px;">Container</a> <a href="/tags/Learning-note/" style="font-size: 15px;">Learning note</a> <a href="/tags/Recommender-System/" style="font-size: 15px;">Recommender System</a> <a href="/tags/Neural-Network/" style="font-size: 15px;">Neural Network</a> <a href="/tags/OpenGL/" style="font-size: 15px;">OpenGL</a> <a href="/tags/C-Gaming/" style="font-size: 15px;">C++ Gaming</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//kiosspot.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://silentming.net/" title="SilentMing's Gensokyo" target="_blank">SilentMing's Gensokyo</a><ul></ul><a href="https://unlimitedcodeworks.xyz/" title="Unlimited Code Works" target="_blank">Unlimited Code Works</a><ul></ul><a href="https://blog.icehoney.me/" title="雪月秋水" target="_blank">雪月秋水</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">Kio's Spot.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.2" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.2" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.2"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.2"></script></div></body></html>
