@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>Adaptive Local Color Constancy using Kernel Prediction Networks | Kio's Spot</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/latest/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/latest/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/latest/grids-responsive-min.min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/latest/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script src="https://www.googletagmanager.com/gtag/js?id=UA-160042218-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-160042218-1');
+</script><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/latest/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/latest/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/latest/toastr.min.css"><div class="darkmode-toggle">🌓</div><script>var prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+var toggle = document.querySelector('.darkmode-toggle');
+var html = document.querySelector('html');
+
+html.dataset.dark = localStorage.dark || prefersDarkMode.matches;
+
+toggle.addEventListener('click', () => {
+localStorage.dark = !(html.dataset.dark == 'true');
+html.dataset.dark = localStorage.dark;
+});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Adaptive Local Color Constancy using Kernel Prediction Networks</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Adaptive Local Color Constancy using Kernel Prediction Networks</h1><div class="post-meta">2019-10-26<span> | </span><span class="category"><a href="/categories/Image-Processing/">Image Processing</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 803</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 5</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2019/10/26/Local Color Constancy/" href="/2019/10/26/Local%20Color%20Constancy/#disqus_thread"></a><div class="post-content"><p>This is an article for introducing a work done with my colleague on the topic of locally compute auto color constancy. You could access the paper on <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1902.04705">arxiv</a> and source code on <a target="_blank" rel="noopener" href="https://github.com/LiamLYJ/KPF_WB">github</a>.</p>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>First let’s see what conventional color consistancy does. You can see what color consistancy from following famous picture:<br><img src="/colorConstancySample.jpg"></p>
+<p>The center picture is original, you can see that environment light color is biased to gold-ish. The right one is result that environment color bias has been removed. The left one is otherwise opposite, the color bias is enhanced. Color constancy is the process that remove environment color bias to rveal truth object color like the right one above.</p>
+<p>The conventional color constancy algorithm could be written in following matrix form:<br>$$<br>\begin{pmatrix}<br>R’ \\<br>G’ \\<br>B’<br>\end{pmatrix}<br>&#x3D;\begin{pmatrix}<br>e^R &amp; 0 &amp; 0 \\<br>0 &amp; e^G &amp; 0 \\<br>0 &amp; 0 &amp; e^B<br>\end{pmatrix}<br>\begin{pmatrix}<br>R \\<br>G \\<br>B<br>\end{pmatrix}<br>$$</p>
+<p>where $R, G, B$ are original image pixel value, $e^R, e^G, e^B$ are scalar value for each color band, $R’, G’, B’$ are pixel value after color constancy. This means for all pixel in image, we have three factors $e^R, e^G, e^B$ to adjust image color (i.e. global algorithm).</p>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>However, the conventional algorithm may have difficulties in some situations. For example, the following scenes:<br><img src="/multiLightSrcExample.png"></p>
+<p>These scenes have different light sources at different image location, and it might not suitable for applying global illuminant algorithms. Following are result comparison of our method and global color constancy:<br><img src="/sampleResult.png"></p>
+<h2 id="Strategy"><a href="#Strategy" class="headerlink" title="Strategy"></a>Strategy</h2><p>The strategy we tried is extend the color constancy equation, and we trained a neural network to do solve the equation. We did following tryings to extend equation:</p>
+<ul>
+<li><p>To each pixel $i$, let them have different adjust scalars:<br>  $$<br>  \begin{pmatrix}<br>  R’_i \\<br>  G’_i \\<br>  B’_i<br>  \end{pmatrix}<br>  &#x3D;\begin{pmatrix}<br>  e^R_i &amp; 0 &amp; 0 \\<br>  0 &amp; e^G_i &amp; 0 \\<br>  0 &amp; 0 &amp; e^B_i<br>  \end{pmatrix}<br>  \begin{pmatrix}<br>  R_i \\<br>  G_i \\<br>  B_i<br>  \end{pmatrix}<br>  $$</p>
+</li>
+<li><p>To utilize not only the current pixel, but also pixels around it (Bold means k$\times$k pixel patch):<br>  $$<br>  \begin{pmatrix}<br>  R’_i \\<br>  G’_i \\<br>  B’_i<br>  \end{pmatrix}<br>  &#x3D;\begin{pmatrix}<br>  \mathbf{e}^R_i &amp; 0 &amp; 0 \\<br>  0 &amp; \mathbf{e}^G_i &amp; 0 \\<br>  0 &amp; 0 &amp; \mathbf{e}^B_i<br>  \end{pmatrix}<br>  \begin{pmatrix}<br>  \mathbf{R}_i \\<br>  \mathbf{G}_i \\<br>  \mathbf{B}_i<br>  \end{pmatrix}<br>  $$</p>
+<p>  The multiplication is the sum of element-wise multiplication, e.g.<br>  $$<br>  \mathbf{e}^R_i\mathbf{R_i}&#x3D;\sum_{j&#x3D;1}^{k\times k} e^R_{ij}\times R_{ij}<br>  $$</p>
+</li>
+<li><p>By the experiments on second step, results are still not good enough. Then we tried to add information from other color bands (like CCM - Color Correction Matrix):<br>  $$<br>  \begin{pmatrix}<br>  R’_i \\<br>  G’_i \\<br>  B’_i<br>  \end{pmatrix}<br>  &#x3D;\begin{pmatrix}<br>  \mathbf{e’}^R_i &amp; \mathbf{e’}^G_i &amp; \mathbf{e’}^B_i \\<br>  \mathbf{e’’}^R_i &amp; \mathbf{e’’}^G_i &amp; \mathbf{e’’}^B_i \\<br>  \mathbf{e’’’}^R_i &amp; \mathbf{e’’’}^G_i &amp; \mathbf{e’’’}^B_i<br>  \end{pmatrix}<br>  \begin{pmatrix}<br>  \mathbf{R}_i \\<br>  \mathbf{G}_i \\<br>  \mathbf{B}_i<br>  \end{pmatrix}<br>  $$</p>
+<p>  But it will make our algorithm ambiguous from color constancy and CCM, so we add penalty loss at $e$ values that not lying on diagonal:<br>  $$<br>  Loss_{panalty} &#x3D; \mathbf{e’}^G_i + \mathbf{e’}^B_i + \mathbf{e’’}^B_i + \mathbf{e’’}^R_i + \mathbf{e’’’}^R_i + \mathbf{e’’’}^G_i<br>  $$</p>
+</li>
+</ul>
+<h2 id="Network-structure"><a href="#Network-structure" class="headerlink" title="Network structure"></a>Network structure</h2><p>Now I will introduce how we implement the extended equation by neural networks. Given an input image, we use a U-Net to extract kernels ($\mathbf{e}$ matrix above) for every input pixels. The kernels is then directly used for generate a sample corrected image (Reference Image):<br><img src="/networkStructure.png"></p>
+<p>The trainning is processed to minimize the difference between Reference and Ground Truth image, and $Loss_{panalty}$:<br>$$<br>Loss &#x3D; Diff(GT-Reference) + Loss_{panalty}<br>$$</p>
+<h3 id="Confidence-value"><a href="#Confidence-value" class="headerlink" title="Confidence value"></a>Confidence value</h3><p>In our framework, we also extract a confidence value to indicate how confidence the network is about a certain input image. The confidence value is how much diagonal value contribute in $\mathbf{e}$ matrix (If non-diagonal part are all zero values, the confidence is max). The confidence calculation is written in Section 3.3 in our paper.</p>
+<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>For evaluation, because current color constancy dataset only have global $\mathbf{e}$ value, we divide reference by input image to get a global value ($e_{global}&#x3D;\frac{I_{Reference}}{I_{Input}}$). Following is result metric of our method and compatitive algorithm:<br><img src="/resultMetric.png"></p>
+<p>And here are more examples of our algorithm:<br><img src="/moreResult.png"></p>
+<p>For more evaluation results, you could access supplementary <a target="_blank" rel="noopener" href="https://github.com/LiamLYJ/WB_tex/blob/master/Ver_final_after/sup.pdf">here</a>.</p>
+<h2 id="Citation"><a href="#Citation" class="headerlink" title="Citation"></a>Citation</h2><pre><code>@article&#123;liu2019self,
+    title=&#123;Self-adaptive Single and Multi-illuminant Estimation Framework based on Deep Learning&#125;,
+    author=&#123;Liu, Yongjie and Shen, Sijie&#125;,
+    journal=&#123;arXiv preprint arXiv:1902.04705&#125;,
+    year=&#123;2019&#125;
+    &#125;
+</code></pre>
+</div><div class="tags"><a href="/tags/Neural Network"><i class="fa fa-tag">Neural Network</i></a><a href="/tags/Paper"><i class="fa fa-tag">Paper</i></a></div><div class="post-nav"><a class="pre" href="/2019/11/12/Introduction%20to%203D%20Rendering/">Introduction to 3D Rendering</a><a class="next" href="/2019/04/12/Multi-view%20Geometry%201/">Multi-view Geometry 0 Background</a></div><link rel="stylesheet" type="text/css" href="https://unpkg.com/disqusjs@1.3/dist/disqusjs.css"><script type="text/javascript" src="https://unpkg.com/disqusjs@1.3/dist/disqus.js"></script><script type="text/javascript" id="disqus-count-script">$(function() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '//disqus.com/next/config.json', true);
+  xhr.timeout = 2500;
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      $('.post-meta .post-comments-count').show();
+      var s = document.createElement('script');
+      s.id = 'dsq-count-scr';
+      s.src = 'https://kiosspot.disqus.com/count.js';
+      s.async = true;
+      (document.head || document.body).appendChild(s);
+    }
+  };
+  xhr.ontimeout = function () { xhr.abort(); };
+  xhr.send(null);
+});</script><div class="comments" id="disqus_thread"><script type="text/javascript">// Load comments with DisqusJS
+function loadComments() {
+  window.dsqjs = new DisqusJS({
+    shortname: 'kiosspot',
+    siteName: 'Kio\'s Spot',
+    identifier: '2019/10/26/Local Color Constancy/',
+    url: 'http://kiorisyshen.github.io/2019/10/26/Local Color Constancy/',
+    title: 'Adaptive Local Color Constancy using Kernel Prediction Networks',
+    api: '',
+    apikey: '',
+    admin: '',
+    adminLabel: ''
+  });
+}
+// Lazy load {# Credit: https://github.com/theme-next/hexo-theme-next/blob/master/layout/_third-party/comments/disqus.swig #}
+(function () {
+  var offsetTop = document.getElementById('disqus_thread').offsetTop - window.innerHeight;
+  if (offsetTop <= 0) {
+    // Load directly when there's no scrollbar
+    window.addEventListener('load', loadComments, false);
+  } else {
+    var disqusScroll = function () {
+      // offsetTop may changes because of manually resizing browser window or lazy loading images
+      var offsetTop = document.getElementById('disqus_thread').offsetTop - window.innerHeight;
+      var scrollTop = window.scrollY;
+
+      // Pre-load comments a bit? (margin or anything else)
+      if (offsetTop - scrollTop < 60) {
+        window.removeEventListener('scroll', disqusScroll);
+        loadComments();
+      }
+    };
+    window.addEventListener('scroll', disqusScroll);
+  }
+})();
+// Scroll to comments automatically if #comment-xxx anchor specified
+window.addEventListener('load', function () {
+  // I don't know why, it just works.
+  window.setTimeout(function () {
+    if (location.hash.indexOf('#comment-') !== -1) {
+      document.getElementById('disqus_thread').scrollIntoView(true);
+    }
+  }, 100);
+}, false);
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://kiorisyshen.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Lidar/">Lidar</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Computer-Graphics/">Computer Graphics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Image-Processing/">Image Processing</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Multi-view-Geometry/">Multi-view Geometry</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Coding-Note/" style="font-size: 15px;">Coding Note</a> <a href="/tags/C-Gaming/" style="font-size: 15px;">C++ Gaming</a> <a href="/tags/OpenGL/" style="font-size: 15px;">OpenGL</a> <a href="/tags/Metal/" style="font-size: 15px;">Metal</a> <a href="/tags/Learning-note/" style="font-size: 15px;">Learning note</a> <a href="/tags/Neural-Network/" style="font-size: 15px;">Neural Network</a> <a href="/tags/Paper/" style="font-size: 15px;">Paper</a> <a href="/tags/ROS/" style="font-size: 15px;">ROS</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//kiosspot.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://silentming.net/" title="SilentMing's Gensokyo" target="_blank">SilentMing's Gensokyo</a><ul></ul><a href="https://unlimitedcodeworks.xyz/" title="Unlimited Code Works" target="_blank">Unlimited Code Works</a><ul></ul><a href="https://blog.icehoney.me/" title="雪月秋水" target="_blank">雪月秋水</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/." rel="nofollow">Kio's Spot.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/latest/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/latest/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>

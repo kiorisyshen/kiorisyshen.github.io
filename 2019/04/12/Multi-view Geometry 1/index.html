@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>Multi-view Geometry 0 Background | Kio's Spot</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/latest/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/latest/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/latest/grids-responsive-min.min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/latest/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script src="https://www.googletagmanager.com/gtag/js?id=UA-160042218-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-160042218-1');
+</script><script type="text/javascript" src="//lib.baomitu.com/clipboard.js/latest/clipboard.min.js"></script><script type="text/javascript" src="//lib.baomitu.com/toastr.js/latest/toastr.min.js"></script><link rel="stylesheet" href="//lib.baomitu.com/toastr.js/latest/toastr.min.css"><div class="darkmode-toggle">🌓</div><script>var prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+var toggle = document.querySelector('.darkmode-toggle');
+var html = document.querySelector('html');
+
+html.dataset.dark = localStorage.dark || prefersDarkMode.matches;
+
+toggle.addEventListener('click', () => {
+localStorage.dark = !(html.dataset.dark == 'true');
+html.dataset.dark = localStorage.dark;
+});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Multi-view Geometry 0 Background</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Multi-view Geometry 0 Background</h1><div class="post-meta">2019-04-12<span> | </span><span class="category"><a href="/categories/Multi-view-Geometry/">Multi-view Geometry</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.9k</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 11</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2019/04/12/Multi-view Geometry 1/" href="/2019/04/12/Multi-view%20Geometry%201/#disqus_thread"></a><div class="post-content"><p>This is a learning note for the book: <a target="_blank" rel="noopener" href="http://cvrs.whu.edu.cn/downloads/ebooks/Multiple%20View%20Geometry%20in%20Computer%20Vision%20%28Second%20Edition%29.pdf">Multiple View Geometry in Computer Vision, Second Edition</a>.</p>
+<h1 id="Projective-Geometry-and-Transformations-of-2D"><a href="#Projective-Geometry-and-Transformations-of-2D" class="headerlink" title="Projective Geometry and Transformations of 2D"></a>Projective Geometry and Transformations of 2D</h1><h2 id="Line-and-point"><a href="#Line-and-point" class="headerlink" title="Line and point"></a><strong>Line and point</strong></h2><ul>
+<li><p>Definition (inhomogeneous $\Leftrightarrow$ homogeneous):<br>$$ax+by+c&#x3D;0 \Leftrightarrow \mathbf{x}^\top\mathbf{L}&#x3D;0$$<br>Degree of freedom (dof) &#x3D; 2</p>
+</li>
+<li><p>Homogeneous form of Line:<br>$$\mathbf{L}&#x3D;k(a,b,c)^\top \in \mathbb{R}^3$$</p>
+</li>
+<li><p>Homogeneous form of point:<br>$$\mathbf{x}&#x3D;(x_1,x_2,x_3)^\top \in \mathbb{R}^3 \\<br>\Rightarrow (\frac{x_1}{x_3},\frac{x_1}{x_3})\in\mathbb{R}^2 $$</p>
+</li>
+<li><p>Intersection of lines:<br>$$\mathbf{x}&#x3D;\mathbf{L}_1\times\mathbf{L}_2$$<br>Because in vector computation (triple scalar product, think in 3D space):<br>$$\mathbf{L}_1(\mathbf{L}_1\times\mathbf{L}_2)&#x3D;\mathbf{L}_2(\mathbf{L}_1\times\mathbf{L}_2)\\<br>\Rightarrow \mathbf{L}_1\mathbf{v}&#x3D;\mathbf{L}_2\mathbf{v}\\<br>\Rightarrow \mathbf{v}&#x3D;\mathbf{x}$$</p>
+</li>
+<li><p>Line through two points:<br>$$\mathbf{L}&#x3D;\mathbf{x}_1\times\mathbf{x}_2$$<br>Use the same trick above.</p>
+</li>
+<li><p>Ideal points (the point two parallel line intersect on):<br>$$\mathbf{x}_{ideal}&#x3D;(x_1,x_2,0)^\top\in\mathbb{R}^3$$</p>
+</li>
+<li><p>Line at infinity (The set of ideal points lies):<br>$$\mathbf{L}_\infty&#x3D;(0,0,1)^\top\in\mathbb{R}^3$$</p>
+</li>
+<li><p>Projective Plane:</p>
+<p>Points and lines of $\mathbb{P}^2$ are represented by rays and planes in $\mathbb{R}^3$ respectively. Ideal points are the vectors lying in $x_1x_2$-plane, and $\mathbf{L}_\infty$ is $x_1x_2$-plane.</p>
+<p><img src="/2019-04-12-18-26-33.png" alt="A model of the projective plane"></p>
+</li>
+<li><p>Duality principle</p>
+<p>In 2D projective geometry, any theorem has dual theorem by interchanging lines and points.</p>
+</li>
+</ul>
+<h2 id="Conics"><a href="#Conics" class="headerlink" title="Conics"></a><strong>Conics</strong></h2><ul>
+<li><p>Definition (inhomogeneous $\Leftrightarrow$ homogeneous):<br>$$ax^2+bxy+cy^2+dx+ey+f&#x3D;0 \\<br>\Leftrightarrow ax_1^2+bx_1x_2+cx_2^2+dx_1x_3+ex_2x_3+fx_3^2&#x3D;0 \\<br>where, x\rightarrow \frac{x_1}{x_3},y\rightarrow \frac{x_2}{x_3}$$</p>
+<p>In matrix form:<br>$$\mathbf{x}^\top C \mathbf{x}&#x3D;0 \\<br>where, C&#x3D;\begin{bmatrix}<br>  a &amp; \frac{b}{2} &amp; \frac{d}{2} \\<br>  \frac{b}{2} &amp; c &amp; \frac{e}{2} \\<br>  \frac{d}{2} &amp; \frac{e}{2} &amp; f<br>\end{bmatrix}$$</p>
+<p>Dof: 5 (The ratios $\{a:b:c:d:e:f\}$)</p>
+</li>
+<li><p>Tangent lines to conics:<br>$$\mathbf{L}&#x3D;C\mathbf{x}$$</p>
+</li>
+<li><p>Line conic definition:<br>$$\mathbf{L}^\top C^* \mathbf{L}&#x3D;0$$</p>
+<p>$$C^*&#x3D;C^{-1}$$<br><img src="/dualconics.png" alt="Point conic and line conic"></p>
+</li>
+</ul>
+<h2 id="Transformations"><a href="#Transformations" class="headerlink" title="Transformations"></a><strong>Transformations</strong></h2><ul>
+<li><p>Projection transformation:<br>$$\mathbf{x}’&#x3D;H\mathbf{x}, \mathbf{x}\in\mathbb{R}^3$$<br>, where $H$ is non-sigular matrix.</p>
+</li>
+<li><p>Transformation of lines:<br>$$\mathbf{L}’&#x3D;H^{-\top}\mathbf{L}$$</p>
+</li>
+<li><p>Transformation of conics:<br>When $\mathbf{x}’&#x3D;H\mathbf{x}$,<br>$$\mathbf{x}^\top C\mathbf{x}&#x3D;[H^{-1}\mathbf{x}’]^\top C H^{-1}\mathbf{x}’\\<br>&#x3D;\mathbf{x}’^\top [H^{-\top}CH^{-1}]\mathbf{x}’\\<br>&#x3D;\mathbf{x}’^\top C’\mathbf{x}’$$<br>and for line conics,<br>$$C^{*\prime}&#x3D;HC^*H^\top$$</p>
+</li>
+<li><p>Different transformations<br><img src="/transformations.png" alt="Geometric properties invariant to commonly occuring planar transformations"></p>
+<p>$$R &#x3D; \begin{bmatrix}<br>  cos\theta &amp; -sin\theta \\<br>  sin\theta &amp; cos\theta<br>\end{bmatrix}$$</p>
+</li>
+<li><p>The topology of the projective plane</p>
+<p>Think about $\mathbb{P}^2$ and unit sphere in $\mathbb{R}^3$, there is a two-to-one correspoindence between the unit sphere $S^2 \in \mathbb{R}^3$ and projective plane $\mathbb{P}^2$. In the language of topology, the sphere $S^2$ is a 2-sheeted covering space of $\mathbb{P}^2$.</p>
+</li>
+</ul>
+<h2 id="Recovery-of-affine-and-metric-properties-from-images"><a href="#Recovery-of-affine-and-metric-properties-from-images" class="headerlink" title="Recovery of affine and metric properties from images"></a><strong>Recovery of affine and metric properties from images</strong></h2><p>  <img src="/undistort_perspective.png" alt="Removing perspective distortion"></p>
+<ul>
+<li><strong>The line at infinity $\mathbf{L}_\infty$ is a fixed line the projective transformation $H$ if and only if $H$ is a afinity</strong></li>
+</ul>
+<p>  <img src="/affinity_infline.png" alt="Affine rectification. $H_A$ is and only is affine trnsformation."></p>
+<ul>
+<li><p>We can compute vanishing point from parallel line:<br><img src="/parallel_line.png"></p>
+</li>
+<li><p>Also we can compute from a length ratio (see p.51 for more detail):<br><img src="/length_ratio.png"></p>
+</li>
+<li><p><strong>The circular points $\mathbf{I}, \mathbf{J}$ are fixed points under the projective transformation $H$ if and only if $H$ is a similarity (proof: p.52)</strong><br>$$\mathbf{I}&#x3D;(1, i, 0)^\top\\<br>\mathbf{J}&#x3D;(1, -i, 0)^\top$$</p>
+</li>
+<li><p>Classification of conics<br><img src="/classification_conics.png"></p>
+</li>
+</ul>
+<h1 id="Projective-Geometry-and-Transformation-of-3D"><a href="#Projective-Geometry-and-Transformation-of-3D" class="headerlink" title="Projective Geometry and Transformation of 3D"></a>Projective Geometry and Transformation of 3D</h1><h2 id="Points-Lines-and-projective-transformations"><a href="#Points-Lines-and-projective-transformations" class="headerlink" title="Points, Lines, and projective transformations"></a>Points, Lines, and projective transformations</h2><ul>
+<li><p><strong>Points</strong> (homogeneous$\Leftrightarrow$inhomogeneous): $(X_1,X_2,X_3,X_4)^\top \Leftrightarrow (\frac{X_1}{X_4},\frac{X_2}{X_4},\frac{X_3}{X_4})^\top$</p>
+</li>
+<li><p><strong>Planes</strong> (dof: 3):<br>$$\pi_1X+\pi_2Y+\pi_3Z+\pi_4&#x3D;0\\<br>\Leftrightarrow \pi_1X_1+\pi_2X_2+\pi_3X_3+\pi_4X_4&#x3D;0\\<br>\Leftrightarrow \boldsymbol{\pi}^\top\mathbf{X}&#x3D;0$$</p>
+</li>
+<li><p>In $\mathbb{P}^3$, points and planes are dual and lines are self-dual.</p>
+</li>
+<li><p>Three points define a plane:<br>$$\begin{bmatrix}<br>  \mathbf{X}_1^\top \\<br>  \mathbf{X}_2^\top \\<br>  \mathbf{X}_3^\top<br>\end{bmatrix} \boldsymbol{\pi} &#x3D; \mathbf{0}$$</p>
+</li>
+<li><p>Three planes define a point:<br>$$\begin{bmatrix}<br>  \boldsymbol{\pi}_1^\top \\<br>  \boldsymbol{\pi}_2^\top \\<br>  \boldsymbol{\pi}_3^\top<br>\end{bmatrix} \mathbf{X} &#x3D; \mathbf{0}$$</p>
+</li>
+<li><p>Projective transformation:<br>$$\boldsymbol{\pi}’&#x3D;H^{-\top}\boldsymbol{\pi}$$</p>
+</li>
+<li><p>Parametrized points on a plane:<br>$$\mathbf{X}&#x3D;M\mathbf{x}$$<br>$M$ is $4\times3$ matrix to generate the rank 3 null-space of $\boldsymbol{\pi}$.</p>
+</li>
+<li><p><strong>Lines</strong> (dof: 4):</p>
+<p><img src="/line4.png"></p>
+<p>However, to represent a 4 dof would be a homogeneous 5-vector. So there are different representations. Following are three of them:</p>
+</li>
+<li><p>Def. 1: Null-space and span representation (dof: 6)<br>$$W&#x3D;\begin{bmatrix}<br>  \mathbf{A}^\top \\<br>  \mathbf{B}^\top<br>\end{bmatrix}$$</p>
+<p>$\mathbf{A}$, $\mathbf{B}$ is two points in line.</p>
+</li>
+<li><p>Def. 2: Plucker matrices (dof: 4)</p>
+<p>Define by two points:<br>$$\mathbf{L}&#x3D;\mathbf{A}\mathbf{B}^\top-\mathbf{B}\mathbf{A}^T$$</p>
+<p>Define by two planes:<br>$$\mathbf{L}^*&#x3D;\mathbf{P}\mathbf{Q}^\top-\mathbf{Q}\mathbf{P}^T$$<br>$\mathbf{L}^*$ is just the rewrite $\mathbf{L}$:<br>$$l_{12}:l_{13}:l_{14}:l_{23}:l_{42}:l_{34}&#x3D;l_{34}^*:l_{42}^*:l_{23}^*:l_{14}^*:l_{13}^*:l_{12}^*$$</p>
+<p>The <strong>plane</strong> defined by the join of the point $\mathbf{X}$ and Line $\mathbf{L}$ is:<br>$$\boldsymbol{\pi}&#x3D;\mathbf{L}^*\mathbf{X}$$<br>except $\mathbf{X}$ on line $\mathbf{L}$: $\mathbf{L}^*\mathbf{X}&#x3D;0$.</p>
+<p>The <strong>point</strong> defined by the intersection of the line $L$ and plane $\boldsymbol{\pi}$ is:<br>$$\mathbf{X}&#x3D;\mathbf{L}\boldsymbol{\pi}$$<br>except $\boldsymbol{\pi}$ on line $\mathbf{L}$: $\mathbf{L}\boldsymbol{\pi}&#x3D;0$.</p>
+</li>
+<li><p>Def. 3: Plucker line coordinates (dof: 4)<br>Only six non-zero element of Plucker matrix:<br>$$\mathcal{L}&#x3D;{l_{12},l_{13},l_{14},l_{23},l_{42},l_{34}}$$</p>
+</li>
+<li><p>Quadrics and dual quadrics (See p.73)</p>
+</li>
+</ul>
+<h1 id="Estimation-2D-Projective-Transformation"><a href="#Estimation-2D-Projective-Transformation" class="headerlink" title="Estimation - 2D Projective Transformation"></a>Estimation - 2D Projective Transformation</h1><h2 id="The-Direct-Linear-Transformation-DLT-algorithm"><a href="#The-Direct-Linear-Transformation-DLT-algorithm" class="headerlink" title="The Direct Linear Transformation (DLT) algorithm"></a>The Direct Linear Transformation (DLT) algorithm</h2><ul>
+<li><p>Aim to find transformation $H$ given a set of four 2D to 2D point correspondences, $\mathbf{x}_i\leftrightarrow\mathbf{x}_i’$. This gives: $\mathbf{x}_i’&#x3D;H\mathbf{x}_i$</p>
+<p>We can solve $H$ by the cross product: $\mathbf{x}_i’\times H\mathbf{x}_i&#x3D;0$</p>
+<p>Let the $j$-th row of $H$ is denoted by $\mathbf{h}^{1\top}$:<br>$$H\mathbf{x}_i&#x3D;\begin{pmatrix}<br>  \mathbf{h}^{1\top}\mathbf{x}_i \\<br>  \mathbf{h}^{2\top}\mathbf{x}_i \\<br>  \mathbf{h}^{3\top}\mathbf{x}_i<br>\end{pmatrix}$$</p>
+<p>Let $\mathbf{x}_i’&#x3D;(x_i’, y_i’, z_i’)^\top$<br>$$\mathbf{x}_i’\times H\mathbf{x}_i&#x3D;\begin{pmatrix}<br>  y_i’\mathbf{h}^{3\top}\mathbf{x}_i-z_i’\mathbf{h}^{2\top}\mathbf{x}_i \\<br>  z_i’\mathbf{h}^{1\top}\mathbf{x}_i-x_i’\mathbf{h}^{3\top}\mathbf{x}_i \\<br>  x_i’\mathbf{h}^{2\top}\mathbf{x}_i-y_i’\mathbf{h}^{1\top}\mathbf{x}_i<br>\end{pmatrix}$$</p>
+<p>, which could be reformed to:<br>$$\begin{bmatrix}<br>  \mathbf{0}^\top &amp; -z_i’\mathbf{x}_i^\top &amp; y_i’\mathbf{x}_i^\top \\<br>  z_i’\mathbf{x}_i^\top &amp; \mathbf{0}^\top &amp; -x_i’\mathbf{x}_i^\top \\<br>  -y_i’\mathbf{x}_i^\top &amp; x_i’\mathbf{x}_i^\top &amp; \mathbf{0}^\top<br>\end{bmatrix}<br>\begin{pmatrix}<br>  \mathbf{h}^1 \\<br>  \mathbf{h}^2 \\<br>  \mathbf{h}^3<br>\end{pmatrix}&#x3D;\mathbf{0}\\<br>\Leftrightarrow \mathbf{A}_i\mathbf{h}&#x3D;\mathbf{0}$$</p>
+<p>, where $\mathbf{A}_i$ is a $3\times9$ matrix and $h$ is a 9D-vector made up of the entries of the of the entries of $H$.</p>
+<p>(i) The equation $\mathbf{A}_i\mathbf{h}&#x3D;\mathbf{0}$ is an linear equation in the unknown $h$.</p>
+<p>(ii) $\mathbf{A_i}$ has three rows but only two of them are independent. The third row could be the sum of $x_i’$ times the first row and $y_i’$ times the second.</p>
+<p>(iii) We could directly choose $z_i’&#x3D;1$ for measurement, but other choices are possible.</p>
+</li>
+<li><p><strong>Solving for $H$</strong></p>
+<p>Usually we will find multiple point correspondences more than 4. And this leads to over-determined solution. However, due to the measurement noise, the $A$ is not have rand 8. So the target is to minimize $\frac{\lVert\mathbf{A}\mathbf{h}\rVert}{\lVert\mathbf{h}\rVert}$. Which the basic DLT algorithm does:</p>
+<p><img src="/DLT.png"></p>
+<ul>
+<li><p>Computational complexity of the SVD to decompose $m\times n$ matrix:</p>
+<p>To find U, D, V we need $4m^2n+8mn^2+9n^3$ floating-point operations(flops).</p>
+<p>To find only D, V, we need $4mn^2+8n^3$ flops.</p>
+</li>
+<li><p>Configuration to determine the homographic transformation:</p>
+<p>3 points &amp; 1 line – OK</p>
+<p>3 lines &amp; 1 point – OK</p>
+<p>2 lines &amp; 2 points – NO</p>
+<p><img src="/H_config.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Different-cost-functions"><a href="#Different-cost-functions" class="headerlink" title="Different cost functions"></a>Different cost functions</h2><ul>
+<li><p>Algebraic distance</p>
+<p>The DLT algorithm minimizes the norm$\lVert\mathbf{A}\mathbf{h}\rVert$, which is called algebraic distance $\epsilon_i$:<br>$$d_{alg}(\mathbf{x}_i’,H\mathbf{x}_i)^2&#x3D;\lVert\epsilon\rVert^2&#x3D;\lVert\begin{bmatrix}<br>  \mathbf{0}^\top &amp; -z_i’\mathbf{x}_i^\top &amp; y_i’\mathbf{x}_i^\top \\<br>  z_i’\mathbf{x}_i^\top &amp; \mathbf{0}^\top &amp; -x_i’\mathbf{x}_i^\top<br>\end{bmatrix}\mathbf{h}\rVert^2$$</p>
+<p>More generally, for two vecotrs $\mathbf{x}_1$ and $\mathbf{x}_2$, the algebraic distance is:</p>
+<p>$$d_{alg}(\mathbf{x}_1,\mathbf{x}_2)^2&#x3D;a_1^2+a_2^2$$</p>
+<p>, where $\mathbf{a}&#x3D;(a_1,a_2,a_3)^\top&#x3D;\mathbf{x}_1\times \mathbf{x}_2$.</p>
+</li>
+<li><p>Geometric distance</p>
+<p><strong>Notation</strong>: $\mathbf{x}$ represent the <em>measured</em> image coordinates; $\hat{\mathbf{x}}$ represent estimated values of the points and $\overline{\mathbf{x}}$ prepresent true values of the points.</p>
+<p>The measurement is accurate enough, and the only error is <em>transfer</em> error.</p>
+<p>Single image error: $\sum_i d(\mathbf{x}_i’, H\overline{\mathbf{x}}_i)^2$</p>
+<p>Symmetric transfer error: $\sum_i d(\mathbf{x}_i’, H\mathbf{x}_i)^2+d(\mathbf{x}_i,H^{-1}\mathbf{x}_i’)^2$</p>
+</li>
+<li><p>Reprojection error - both images</p>
+<p>$\sum_i d(\mathbf{x}_i, \hat{\mathbf{x}}_i)^2+d(\mathbf{x}_i’,\hat{\mathbf{x}}_i’)^2$ subject to $\hat{\mathbf{x}}_i’&#x3D;\hat{H}\hat{\mathbf{x}}_i$</p>
+<p><img src="/reprojectError.png"></p>
+<ul>
+<li>For affine transformation and below, the DLT algorithm is the same as geometric distance.</li>
+</ul>
+</li>
+<li><p>Sampson error (Skip, ref: p.98)</p>
+</li>
+</ul>
+<h2 id="Statistical-cost-functions-and-Maximum-Likelihood-estimation"><a href="#Statistical-cost-functions-and-Maximum-Likelihood-estimation" class="headerlink" title="Statistical cost functions and Maximum Likelihood estimation"></a>Statistical cost functions and Maximum Likelihood estimation</h2><p>  Skip. ref: 102</p>
+<h2 id="Transformation-invariance-and-normalization"><a href="#Transformation-invariance-and-normalization" class="headerlink" title="Transformation invariance and normalization"></a>Transformation invariance and normalization</h2><ul>
+<li><p>Non-invariance of the DLT algorithm</p>
+<p>Suppose we have correspondences $\mathbf{x}_i\leftrightarrow\mathbf{x}_i’$ in image, and we have another transformation $T$ (like origin change, coordinates direction change, etc.). The transformed correspondences will be $\tilde{\mathbf{x}}_i\leftrightarrow\tilde{\mathbf{x}}_i’$, where $\tilde{\mathbf{x}}_i &#x3D; T\mathbf{x}_i$ and $\tilde{\mathbf{x}}_i’ &#x3D; T’\mathbf{x}_i’$. Then let $\tilde{H}&#x3D;T’HT^{-1}$, we will get:</p>
+<p><img src="/noinv_DLT.png"></p>
+<p>which means:</p>
+<p><img src="/noinv_DLT2.png"></p>
+</li>
+<li><p>Invariance of geometric error</p>
+<p>$$d(\tilde{\mathbf{x}}_i’, \tilde{H}\tilde{\mathbf{x}})&#x3D;d(T’\mathbf{x}’, T’HT^{-1}T\mathbf{x})&#x3D;d(T’\mathbf{x}’, T’H\mathbf{x})&#x3D;d(\mathbf{x}’,H\mathbf{x})$$</p>
+</li>
+<li><p>Normalizing transformations</p>
+<p><img src="/norm_DLT.png"></p>
+</li>
+</ul>
+<h2 id="Iterative-minimization-amp-Robust-estimation-RANSAC"><a href="#Iterative-minimization-amp-Robust-estimation-RANSAC" class="headerlink" title="Iterative minimization &amp; Robust estimation (RANSAC)"></a>Iterative minimization &amp; Robust estimation (RANSAC)</h2><p>  skip (ref: 110)</p>
+<h1 id="Background-note-end"><a href="#Background-note-end" class="headerlink" title="Background note end."></a>Background note end.</h1></div><div class="tags"><a href="/tags/Learning note"><i class="fa fa-tag">Learning note</i></a></div><div class="post-nav"><a class="pre" href="/2019/10/26/Local%20Color%20Constancy/">Adaptive Local Color Constancy using Kernel Prediction Networks</a><a class="next" href="/2018/08/27/Vector%20Swizzling%20and%20Parameter%20Pack%20in%20C++/">Vector Swizzling and Parameter Pack in C++</a></div><link rel="stylesheet" type="text/css" href="https://unpkg.com/disqusjs@1.3/dist/disqusjs.css"><script type="text/javascript" src="https://unpkg.com/disqusjs@1.3/dist/disqus.js"></script><script type="text/javascript" id="disqus-count-script">$(function() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '//disqus.com/next/config.json', true);
+  xhr.timeout = 2500;
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      $('.post-meta .post-comments-count').show();
+      var s = document.createElement('script');
+      s.id = 'dsq-count-scr';
+      s.src = 'https://kiosspot.disqus.com/count.js';
+      s.async = true;
+      (document.head || document.body).appendChild(s);
+    }
+  };
+  xhr.ontimeout = function () { xhr.abort(); };
+  xhr.send(null);
+});</script><div class="comments" id="disqus_thread"><script type="text/javascript">// Load comments with DisqusJS
+function loadComments() {
+  window.dsqjs = new DisqusJS({
+    shortname: 'kiosspot',
+    siteName: 'Kio\'s Spot',
+    identifier: '2019/04/12/Multi-view Geometry 1/',
+    url: 'http://kiorisyshen.github.io/2019/04/12/Multi-view Geometry 1/',
+    title: 'Multi-view Geometry 0 Background',
+    api: '',
+    apikey: '',
+    admin: '',
+    adminLabel: ''
+  });
+}
+// Lazy load {# Credit: https://github.com/theme-next/hexo-theme-next/blob/master/layout/_third-party/comments/disqus.swig #}
+(function () {
+  var offsetTop = document.getElementById('disqus_thread').offsetTop - window.innerHeight;
+  if (offsetTop <= 0) {
+    // Load directly when there's no scrollbar
+    window.addEventListener('load', loadComments, false);
+  } else {
+    var disqusScroll = function () {
+      // offsetTop may changes because of manually resizing browser window or lazy loading images
+      var offsetTop = document.getElementById('disqus_thread').offsetTop - window.innerHeight;
+      var scrollTop = window.scrollY;
+
+      // Pre-load comments a bit? (margin or anything else)
+      if (offsetTop - scrollTop < 60) {
+        window.removeEventListener('scroll', disqusScroll);
+        loadComments();
+      }
+    };
+    window.addEventListener('scroll', disqusScroll);
+  }
+})();
+// Scroll to comments automatically if #comment-xxx anchor specified
+window.addEventListener('load', function () {
+  // I don't know why, it just works.
+  window.setTimeout(function () {
+    if (location.hash.indexOf('#comment-') !== -1) {
+      document.getElementById('disqus_thread').scrollIntoView(true);
+    }
+  }, 100);
+}, false);
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://kiorisyshen.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Lidar/">Lidar</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Computer-Graphics/">Computer Graphics</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Image-Processing/">Image Processing</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Multi-view-Geometry/">Multi-view Geometry</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Coding-Note/" style="font-size: 15px;">Coding Note</a> <a href="/tags/C-Gaming/" style="font-size: 15px;">C++ Gaming</a> <a href="/tags/OpenGL/" style="font-size: 15px;">OpenGL</a> <a href="/tags/Metal/" style="font-size: 15px;">Metal</a> <a href="/tags/Learning-note/" style="font-size: 15px;">Learning note</a> <a href="/tags/Neural-Network/" style="font-size: 15px;">Neural Network</a> <a href="/tags/Paper/" style="font-size: 15px;">Paper</a> <a href="/tags/ROS/" style="font-size: 15px;">ROS</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//kiosspot.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://silentming.net/" title="SilentMing's Gensokyo" target="_blank">SilentMing's Gensokyo</a><ul></ul><a href="https://unlimitedcodeworks.xyz/" title="Unlimited Code Works" target="_blank">Unlimited Code Works</a><ul></ul><a href="https://blog.icehoney.me/" title="雪月秋水" target="_blank">雪月秋水</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/." rel="nofollow">Kio's Spot.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/latest/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/latest/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
