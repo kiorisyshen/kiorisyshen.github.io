@@ -11,20 +11,42 @@ html.dataset.dark = localStorage.dark || prefersDarkMode.matches;
 toggle.addEventListener('click', () => {
 localStorage.dark = !(html.dataset.dark == 'true');
 html.dataset.dark = localStorage.dark;
-});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Neural Network III Backpropagation</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Neural Network III Backpropagation</h1><div class="post-meta">2016-04-01<span> | </span><span class="category"><a href="/categories/Machine-Learning/">Machine Learning</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 677</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 4</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/04/01/Neural Network III Backpropagation/" href="/2016/04/01/Neural%20Network%20III%20Backpropagation/#disqus_thread"></a><div class="post-content"><p>This is a note for learning Neural Network in Machine Learning based on this <a target="_blank" rel="noopener" href="https://www.coursera.org/course/neuralnets">course</a> on <a target="_blank" rel="noopener" href="https://www.coursera.org/">Coursera</a>.</p>
-<h2 id="Learning-weights-of-perceptron"><a href="#Learning-weights-of-perceptron" class="headerlink" title="Learning weights of perceptron"></a>Learning weights of perceptron</h2><p>Different to the learning procedure for perceptron in the post before, here is a new way for learning. Instead of showing the weights get closer to a good set of weights, show that the actual output values get closer the target values.</p>
+});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Neural Network III Backpropagation</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Neural Network III Backpropagation</h1><div class="post-meta">2016-04-01<span> | </span><span class="category"><a href="/categories/Machine-Learning/">Machine Learning</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 663</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 4</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/04/01/Neural Network III Backpropagation/" href="/2016/04/01/Neural%20Network%20III%20Backpropagation/#disqus_thread"></a><div class="post-content"><p>This is a note for learning Neural Network in Machine Learning based on this <a target="_blank" rel="noopener" href="https://www.coursera.org/course/neuralnets">course</a> on <a target="_blank" rel="noopener" href="https://www.coursera.org">Coursera</a>.</p>
+<h2 id="Learning-weights-of-perceptron">Learning weights of perceptron</h2>
+<p>Different to the learning procedure for perceptron in the post before, here is a new way for learning. Instead of showing the weights get closer to a good set of weights, show that the actual output values get closer the target values.</p>
 <p>The advantage of this method is that it is the fundamentals towards building a learning algorithm for multiple layers neural network.</p>
-<h3 id="linear-neuron"><a href="#linear-neuron" class="headerlink" title="linear neuron"></a>linear neuron</h3><p>This is the batch delta rule for changing weights.<br>Definition:<br>$$y&#x3D;\sum_{i}w_i x_i$$</p>
-<p>x is input vector, y is output, w is weight vector. The definition of the squared error:<br>$$E&#x3D;\frac{1}{2}\sum_{n\in{training}}(t_n-y_n)^2$$</p>
-<p>t is the target value for each training case. So, we need to derive the value of gradient $\frac{\partial E}{\partial w_i}$, So,<br>$$\frac{\partial{E}}{\partial{w_i}} &#x3D; \frac{1}{2}\sum_{n\in{training}}\frac{\partial y_n}{\partial w_i}\frac{dE_n}{dy_n} &#x3D; -\sum_{n\in{training}}x_{i(n)}(t_n-y_n)$$<br>Then we add a learning rate $\epsilon$ to the small change on w:<br>$$\Delta w_i &#x3D; -\epsilon\frac{\partial E}{\partial w_i}&#x3D;\sum_{n\in{training}}\epsilon x_{i(n)}(t_n-y_n)$$</p>
-<h3 id="Logistic-neuron"><a href="#Logistic-neuron" class="headerlink" title="Logistic neuron"></a>Logistic neuron</h3><p>Definition:<br>$$y&#x3D;\sum_{i}w_i x_i$$<br>$$y&#x3D;\frac{1}{1+e^{-\beta z}}\Rightarrow \frac{dy}{dz} &#x3D; y(1-y)$$<br>$$E&#x3D;\frac{1}{2}\sum_{n\in{training}}(t_n-y_n)^2$$<br> So,<br>$$\frac{\partial{E}}{\partial{w_i}} &#x3D; \sum_n\frac{\partial y_n}{\partial w_i}\frac{\partial E}{\partial y_n} &#x3D; \sum_n\frac{\partial z_n}{\partial w_i}\frac{dy_n}{dz_n}\frac{\partial E}{\partial y_n} &#x3D; -\sum_n x_{i(n)}y_n(1-y_n)(t_n-y_n)$$</p>
-<h2 id="Backpropagation-algorithm"><a href="#Backpropagation-algorithm" class="headerlink" title="Backpropagation algorithm"></a>Backpropagation algorithm</h2><p>In order to get nonlinear function for the NN and make machine to learn the feature, we need to add hidden layer to our NN framework. Thus we need an algorithm to adjust all hidden layers’ weights efficiently.</p>
-<p>The idea behind backpropagation is that though we don t know what the hidden units ought to do, but we can compute how fast the error changes as we change a hidden activity. Here is the procedure:<br><img src="/Backpropagation.png"></p>
-<p><em>The j represent the current layer, the i represent the layer before current layer</em>. The definition of error function:<br>$$E&#x3D;\frac{1}{2}\sum_{j\in{output}}(t_j-y_j)^2$$<br>thus,</p>
-<p>$$\frac{\partial E}{\partial w_{ij}} &#x3D; \frac{\partial z_j}{\partial w_{ij}}\frac{\partial E}{\partial z_j} &#x3D; y_i \frac{\partial{E}}{\partial z_j} &#x3D; y_i \frac{\partial y_j}{\partial z_j}\frac{\partial E}{\partial y_j} &#x3D; y_i y_j(1-y_j)\frac{\partial E}{\partial y_j} &#x3D; y_i y_j(1-y_j)[-(t_j-y_j)] $$</p>
-<p>For computing further layers, we need to derive $\frac{\partial E}{\partial y_i}$, so,<br>$$\frac{\partial E}{\partial y_i} &#x3D; \sum_j \frac{dz_j}{dy_i}\frac{\partial E}{\partial z_j} &#x3D; \sum_j w_{ij}\frac{\partial E}{\partial z_j} &#x3D; \sum_j w_{ij}y_j(1-y_j)[-(t_j-y_j)]$$<br>Now, with $\frac{\partial E}{\partial y_i}$, we could do the iterate things back to layers close to input layers.</p>
-<h2 id="Issues-in-using-Backpropagation"><a href="#Issues-in-using-Backpropagation" class="headerlink" title="Issues in using Backpropagation"></a>Issues in using Backpropagation</h2><p>These two issue will be discussed in the later lectures.</p>
-<h3 id="Optimization-issues"><a href="#Optimization-issues" class="headerlink" title="Optimization issues"></a>Optimization issues</h3><p>How do we use the error derivatives on individual cases to discover a good set of weights?</p>
+<h3 id="linear-neuron">linear neuron</h3>
+<p>This is the batch delta rule for changing weights.<br>
+Definition:<br>
+$$y=\sum_{i}w_i x_i$$</p>
+<p>x is input vector, y is output, w is weight vector. The definition of the squared error:<br>
+$$E=\frac{1}{2}\sum_{n\in{training}}(t_n-y_n)^2$$</p>
+<p>t is the target value for each training case. So, we need to derive the value of gradient $\frac{\partial E}{\partial w_i}$, So,<br>
+$$\frac{\partial{E}}{\partial{w_i}} = \frac{1}{2}\sum_{n\in{training}}\frac{\partial y_n}{\partial w_i}\frac{dE_n}{dy_n} = -\sum_{n\in{training}}x_{i(n)}(t_n-y_n)$$<br>
+Then we add a learning rate $\epsilon$ to the small change on w:<br>
+$$\Delta w_i = -\epsilon\frac{\partial E}{\partial w_i}=\sum_{n\in{training}}\epsilon x_{i(n)}(t_n-y_n)$$</p>
+<h3 id="Logistic-neuron">Logistic neuron</h3>
+<p>Definition:<br>
+$$y=\sum_{i}w_i x_i$$<br>
+$$y=\frac{1}{1+e^{-\beta z}}\Rightarrow \frac{dy}{dz} = y(1-y)$$<br>
+$$E=\frac{1}{2}\sum_{n\in{training}}(t_n-y_n)^2$$<br>
+So,<br>
+$$\frac{\partial{E}}{\partial{w_i}} = \sum_n\frac{\partial y_n}{\partial w_i}\frac{\partial E}{\partial y_n} = \sum_n\frac{\partial z_n}{\partial w_i}\frac{dy_n}{dz_n}\frac{\partial E}{\partial y_n} = -\sum_n x_{i(n)}y_n(1-y_n)(t_n-y_n)$$</p>
+<h2 id="Backpropagation-algorithm">Backpropagation algorithm</h2>
+<p>In order to get nonlinear function for the NN and make machine to learn the feature, we need to add hidden layer to our NN framework. Thus we need an algorithm to adjust all hidden layers’ weights efficiently.</p>
+<p>The idea behind backpropagation is that though we don t know what the hidden units ought to do, but we can compute how fast the error changes as we change a hidden activity. Here is the procedure:</p>
+<img src="/2016/04/01/Neural%20Network%20III%20Backpropagation/Backpropagation.png" class="">
+<p><em>The j represent the current layer, the i represent the layer before current layer</em>. The definition of error function:<br>
+$$E=\frac{1}{2}\sum_{j\in{output}}(t_j-y_j)^2$$<br>
+thus,</p>
+<p>$$\frac{\partial E}{\partial w_{ij}} = \frac{\partial z_j}{\partial w_{ij}}\frac{\partial E}{\partial z_j} = y_i \frac{\partial{E}}{\partial z_j} = y_i \frac{\partial y_j}{\partial z_j}\frac{\partial E}{\partial y_j} = y_i y_j(1-y_j)\frac{\partial E}{\partial y_j} = y_i y_j(1-y_j)[-(t_j-y_j)] $$</p>
+<p>For computing further layers, we need to derive $\frac{\partial E}{\partial y_i}$, so,<br>
+$$\frac{\partial E}{\partial y_i} = \sum_j \frac{dz_j}{dy_i}\frac{\partial E}{\partial z_j} = \sum_j w_{ij}\frac{\partial E}{\partial z_j} = \sum_j w_{ij}y_j(1-y_j)[-(t_j-y_j)]$$<br>
+Now, with $\frac{\partial E}{\partial y_i}$, we could do the iterate things back to layers close to input layers.</p>
+<h2 id="Issues-in-using-Backpropagation">Issues in using Backpropagation</h2>
+<p>These two issue will be discussed in the later lectures.</p>
+<h3 id="Optimization-issues">Optimization issues</h3>
+<p>How do we use the error derivatives on individual cases to discover a good set of weights?</p>
 <ul>
 <li>How often to update the weights</li>
 <li>Online: after each training case.</li>
@@ -33,13 +55,16 @@ html.dataset.dark = localStorage.dark;
 <li>How much to update</li>
 <li>Using fixed learning rate?</li>
 </ul>
-<h3 id="Generalization-issues"><a href="#Generalization-issues" class="headerlink" title="Generalization issues"></a>Generalization issues</h3><p>How do we ensure that the learned weights work well for cases we did not see during training?</p>
+<h3 id="Generalization-issues">Generalization issues</h3>
+<p>How do we ensure that the learned weights work well for cases we did not see during training?</p>
 <ul>
 <li>Overfitting</li>
 <li>Because a NN is flexible, so we need to prevent it to be overfitted.</li>
 <li>A large number of different methods to tackle this problem.</li>
 </ul>
-<h2 id="Supplement"><a href="#Supplement" class="headerlink" title="Supplement"></a>Supplement</h2><p>The backpropagation algorithm is improved by Hinton and other workers in 1985. See this paper for more details:<br>LEARNING INTERNAL REPRESENTATIONS BY ERROR PROPAGATION, David E. Ruineihart, Geoffrey E. Hinton, and Ronald J. Williams, September 1985, ICS Report 8506</p>
+<h2 id="Supplement">Supplement</h2>
+<p>The backpropagation algorithm is improved by Hinton and other workers in 1985. See this paper for more details:<br>
+LEARNING INTERNAL REPRESENTATIONS BY ERROR PROPAGATION, David E. Ruineihart, Geoffrey E. Hinton, and Ronald J. Williams, September 1985, ICS Report 8506</p>
 </div><div class="tags"><a href="/tags/Learning note"><i class="fa fa-tag">Learning note</i></a><a href="/tags/Neural Network"><i class="fa fa-tag">Neural Network</i></a></div><div class="post-nav"><a class="pre" href="/2018/08/27/Vector%20Swizzling%20and%20Parameter%20Pack%20in%20C++/">Vector Swizzling and Parameter Pack in C++</a><a class="next" href="/2016/03/29/Neural%20Network%20II%20Architecture%20&amp;%20Perceptrons/">Neural Network II Architecture &amp; Perceptrons</a></div><link rel="stylesheet" type="text/css" href="https://unpkg.com/disqusjs@1.3/dist/disqusjs.css"><script type="text/javascript" src="https://unpkg.com/disqusjs@1.3/dist/disqus.js"></script><script type="text/javascript" id="disqus-count-script">$(function() {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', '//disqus.com/next/config.json', true);

@@ -11,31 +11,124 @@ html.dataset.dark = localStorage.dark || prefersDarkMode.matches;
 toggle.addEventListener('click', () => {
 localStorage.dark = !(html.dataset.dark == 'true');
 html.dataset.dark = localStorage.dark;
-});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Adaptive Local Color Constancy using Kernel Prediction Networks</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Adaptive Local Color Constancy using Kernel Prediction Networks</h1><div class="post-meta">2019-10-26<span> | </span><span class="category"><a href="/categories/Image-Processing/">Image Processing</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 803</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 5</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2019/10/26/Local Color Constancy/" href="/2019/10/26/Local%20Color%20Constancy/#disqus_thread"></a><div class="post-content"><p>This is an article for introducing a work done with my colleague on the topic of locally compute auto color constancy. You could access the paper on <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1902.04705">arxiv</a> and source code on <a target="_blank" rel="noopener" href="https://github.com/LiamLYJ/KPF_WB">github</a>.</p>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>First let’s see what conventional color consistancy does. You can see what color consistancy from following famous picture:<br><img src="/colorConstancySample.jpg"></p>
+});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Adaptive Local Color Constancy using Kernel Prediction Networks</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Adaptive Local Color Constancy using Kernel Prediction Networks</h1><div class="post-meta">2019-10-26<span> | </span><span class="category"><a href="/categories/Image-Processing/">Image Processing</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 800</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 5</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2019/10/26/Local Color Constancy/" href="/2019/10/26/Local%20Color%20Constancy/#disqus_thread"></a><div class="post-content"><p>This is an article for introducing a work done with my colleague on the topic of locally compute auto color constancy. You could access the paper on <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1902.04705">arxiv</a> and source code on <a target="_blank" rel="noopener" href="https://github.com/LiamLYJ/KPF_WB">github</a>.</p>
+<h2 id="Background-3">Background</h2>
+<p>First let’s see what conventional color consistancy does. You can see what color consistancy from following famous picture:</p>
+<img src="/2019/10/26/Local%20Color%20Constancy/colorConstancySample.jpg" class="">
 <p>The center picture is original, you can see that environment light color is biased to gold-ish. The right one is result that environment color bias has been removed. The left one is otherwise opposite, the color bias is enhanced. Color constancy is the process that remove environment color bias to rveal truth object color like the right one above.</p>
-<p>The conventional color constancy algorithm could be written in following matrix form:<br>$$<br>\begin{pmatrix}<br>R’ \\<br>G’ \\<br>B’<br>\end{pmatrix}<br>&#x3D;\begin{pmatrix}<br>e^R &amp; 0 &amp; 0 \\<br>0 &amp; e^G &amp; 0 \\<br>0 &amp; 0 &amp; e^B<br>\end{pmatrix}<br>\begin{pmatrix}<br>R \\<br>G \\<br>B<br>\end{pmatrix}<br>$$</p>
+<p>The conventional color constancy algorithm could be written in following matrix form:<br>
+$$<br>
+\begin{pmatrix}<br>
+R’ \\<br>
+G’ \\<br>
+B’<br>
+\end{pmatrix}<br>
+=\begin{pmatrix}<br>
+e^R &amp; 0 &amp; 0 \\<br>
+0 &amp; e^G &amp; 0 \\<br>
+0 &amp; 0 &amp; e^B<br>
+\end{pmatrix}<br>
+\begin{pmatrix}<br>
+R \\<br>
+G \\<br>
+B<br>
+\end{pmatrix}<br>
+$$</p>
 <p>where $R, G, B$ are original image pixel value, $e^R, e^G, e^B$ are scalar value for each color band, $R’, G’, B’$ are pixel value after color constancy. This means for all pixel in image, we have three factors $e^R, e^G, e^B$ to adjust image color (i.e. global algorithm).</p>
-<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>However, the conventional algorithm may have difficulties in some situations. For example, the following scenes:<br><img src="/multiLightSrcExample.png"></p>
-<p>These scenes have different light sources at different image location, and it might not suitable for applying global illuminant algorithms. Following are result comparison of our method and global color constancy:<br><img src="/sampleResult.png"></p>
-<h2 id="Strategy"><a href="#Strategy" class="headerlink" title="Strategy"></a>Strategy</h2><p>The strategy we tried is extend the color constancy equation, and we trained a neural network to do solve the equation. We did following tryings to extend equation:</p>
+<h2 id="Motivation">Motivation</h2>
+<p>However, the conventional algorithm may have difficulties in some situations. For example, the following scenes:</p>
+<img src="/2019/10/26/Local%20Color%20Constancy/multiLightSrcExample.png" class="">
+<p>These scenes have different light sources at different image location, and it might not suitable for applying global illuminant algorithms. Following are result comparison of our method and global color constancy:</p>
+<img src="/2019/10/26/Local%20Color%20Constancy/sampleResult.png" class="">
+<h2 id="Strategy">Strategy</h2>
+<p>The strategy we tried is extend the color constancy equation, and we trained a neural network to do solve the equation. We did following tryings to extend equation:</p>
 <ul>
-<li><p>To each pixel $i$, let them have different adjust scalars:<br>  $$<br>  \begin{pmatrix}<br>  R’_i \\<br>  G’_i \\<br>  B’_i<br>  \end{pmatrix}<br>  &#x3D;\begin{pmatrix}<br>  e^R_i &amp; 0 &amp; 0 \\<br>  0 &amp; e^G_i &amp; 0 \\<br>  0 &amp; 0 &amp; e^B_i<br>  \end{pmatrix}<br>  \begin{pmatrix}<br>  R_i \\<br>  G_i \\<br>  B_i<br>  \end{pmatrix}<br>  $$</p>
+<li>
+<p>To each pixel $i$, let them have different adjust scalars:<br>
+$$<br>
+\begin{pmatrix}<br>
+R’_i \\<br>
+G’_i \\<br>
+B’_i<br>
+\end{pmatrix}<br>
+=\begin{pmatrix}<br>
+e^R_i &amp; 0 &amp; 0 \\<br>
+0 &amp; e^G_i &amp; 0 \\<br>
+0 &amp; 0 &amp; e^B_i<br>
+\end{pmatrix}<br>
+\begin{pmatrix}<br>
+R_i \\<br>
+G_i \\<br>
+B_i<br>
+\end{pmatrix}<br>
+$$</p>
 </li>
-<li><p>To utilize not only the current pixel, but also pixels around it (Bold means k$\times$k pixel patch):<br>  $$<br>  \begin{pmatrix}<br>  R’_i \\<br>  G’_i \\<br>  B’_i<br>  \end{pmatrix}<br>  &#x3D;\begin{pmatrix}<br>  \mathbf{e}^R_i &amp; 0 &amp; 0 \\<br>  0 &amp; \mathbf{e}^G_i &amp; 0 \\<br>  0 &amp; 0 &amp; \mathbf{e}^B_i<br>  \end{pmatrix}<br>  \begin{pmatrix}<br>  \mathbf{R}_i \\<br>  \mathbf{G}_i \\<br>  \mathbf{B}_i<br>  \end{pmatrix}<br>  $$</p>
-<p>  The multiplication is the sum of element-wise multiplication, e.g.<br>  $$<br>  \mathbf{e}^R_i\mathbf{R_i}&#x3D;\sum_{j&#x3D;1}^{k\times k} e^R_{ij}\times R_{ij}<br>  $$</p>
+<li>
+<p>To utilize not only the current pixel, but also pixels around it (Bold means k$\times$k pixel patch):<br>
+$$<br>
+\begin{pmatrix}<br>
+R’_i \\<br>
+G’_i \\<br>
+B’_i<br>
+\end{pmatrix}<br>
+=\begin{pmatrix}<br>
+\mathbf{e}^R_i &amp; 0 &amp; 0 \\<br>
+0 &amp; \mathbf{e}^G_i &amp; 0 \\<br>
+0 &amp; 0 &amp; \mathbf{e}^B_i<br>
+\end{pmatrix}<br>
+\begin{pmatrix}<br>
+\mathbf{R}_i \\<br>
+\mathbf{G}_i \\<br>
+\mathbf{B}_i<br>
+\end{pmatrix}<br>
+$$</p>
+<p>The multiplication is the sum of element-wise multiplication, e.g.<br>
+$$<br>
+\mathbf{e}^R_i\mathbf{R_i}=\sum_{j=1}^{k\times k} e^R_{ij}\times R_{ij}<br>
+$$</p>
 </li>
-<li><p>By the experiments on second step, results are still not good enough. Then we tried to add information from other color bands (like CCM - Color Correction Matrix):<br>  $$<br>  \begin{pmatrix}<br>  R’_i \\<br>  G’_i \\<br>  B’_i<br>  \end{pmatrix}<br>  &#x3D;\begin{pmatrix}<br>  \mathbf{e’}^R_i &amp; \mathbf{e’}^G_i &amp; \mathbf{e’}^B_i \\<br>  \mathbf{e’’}^R_i &amp; \mathbf{e’’}^G_i &amp; \mathbf{e’’}^B_i \\<br>  \mathbf{e’’’}^R_i &amp; \mathbf{e’’’}^G_i &amp; \mathbf{e’’’}^B_i<br>  \end{pmatrix}<br>  \begin{pmatrix}<br>  \mathbf{R}_i \\<br>  \mathbf{G}_i \\<br>  \mathbf{B}_i<br>  \end{pmatrix}<br>  $$</p>
-<p>  But it will make our algorithm ambiguous from color constancy and CCM, so we add penalty loss at $e$ values that not lying on diagonal:<br>  $$<br>  Loss_{panalty} &#x3D; \mathbf{e’}^G_i + \mathbf{e’}^B_i + \mathbf{e’’}^B_i + \mathbf{e’’}^R_i + \mathbf{e’’’}^R_i + \mathbf{e’’’}^G_i<br>  $$</p>
+<li>
+<p>By the experiments on second step, results are still not good enough. Then we tried to add information from other color bands (like CCM - Color Correction Matrix):<br>
+$$<br>
+\begin{pmatrix}<br>
+R’_i \\<br>
+G’_i \\<br>
+B’_i<br>
+\end{pmatrix}<br>
+=\begin{pmatrix}<br>
+\mathbf{e’}^R_i &amp; \mathbf{e’}^G_i &amp; \mathbf{e’}^B_i \\<br>
+\mathbf{e’‘}^R_i &amp; \mathbf{e’‘}^G_i &amp; \mathbf{e’‘}^B_i \\<br>
+\mathbf{e’‘’}^R_i &amp; \mathbf{e’‘’}^G_i &amp; \mathbf{e’‘’}^B_i<br>
+\end{pmatrix}<br>
+\begin{pmatrix}<br>
+\mathbf{R}_i \\<br>
+\mathbf{G}_i \\<br>
+\mathbf{B}_i<br>
+\end{pmatrix}<br>
+$$</p>
+<p>But it will make our algorithm ambiguous from color constancy and CCM, so we add penalty loss at $e$ values that not lying on diagonal:<br>
+$$<br>
+Loss_{panalty} = \mathbf{e’}^G_i + \mathbf{e’}^B_i + \mathbf{e’‘}^B_i + \mathbf{e’‘}^R_i + \mathbf{e’‘’}^R_i + \mathbf{e’‘’}^G_i<br>
+$$</p>
 </li>
 </ul>
-<h2 id="Network-structure"><a href="#Network-structure" class="headerlink" title="Network structure"></a>Network structure</h2><p>Now I will introduce how we implement the extended equation by neural networks. Given an input image, we use a U-Net to extract kernels ($\mathbf{e}$ matrix above) for every input pixels. The kernels is then directly used for generate a sample corrected image (Reference Image):<br><img src="/networkStructure.png"></p>
-<p>The trainning is processed to minimize the difference between Reference and Ground Truth image, and $Loss_{panalty}$:<br>$$<br>Loss &#x3D; Diff(GT-Reference) + Loss_{panalty}<br>$$</p>
-<h3 id="Confidence-value"><a href="#Confidence-value" class="headerlink" title="Confidence value"></a>Confidence value</h3><p>In our framework, we also extract a confidence value to indicate how confidence the network is about a certain input image. The confidence value is how much diagonal value contribute in $\mathbf{e}$ matrix (If non-diagonal part are all zero values, the confidence is max). The confidence calculation is written in Section 3.3 in our paper.</p>
-<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>For evaluation, because current color constancy dataset only have global $\mathbf{e}$ value, we divide reference by input image to get a global value ($e_{global}&#x3D;\frac{I_{Reference}}{I_{Input}}$). Following is result metric of our method and compatitive algorithm:<br><img src="/resultMetric.png"></p>
-<p>And here are more examples of our algorithm:<br><img src="/moreResult.png"></p>
+<h2 id="Network-structure">Network structure</h2>
+<p>Now I will introduce how we implement the extended equation by neural networks. Given an input image, we use a U-Net to extract kernels ($\mathbf{e}$ matrix above) for every input pixels. The kernels is then directly used for generate a sample corrected image (Reference Image):</p>
+<img src="/2019/10/26/Local%20Color%20Constancy/networkStructure.png" class="">
+<p>The trainning is processed to minimize the difference between Reference and Ground Truth image, and $Loss_{panalty}$:<br>
+$$<br>
+Loss = Diff(GT-Reference) + Loss_{panalty}<br>
+$$</p>
+<h3 id="Confidence-value">Confidence value</h3>
+<p>In our framework, we also extract a confidence value to indicate how confidence the network is about a certain input image. The confidence value is how much diagonal value contribute in $\mathbf{e}$ matrix (If non-diagonal part are all zero values, the confidence is max). The confidence calculation is written in Section 3.3 in our paper.</p>
+<h2 id="Evaluation">Evaluation</h2>
+<p>For evaluation, because current color constancy dataset only have global $\mathbf{e}$ value, we divide reference by input image to get a global value ($e_{global}=\frac{I_{Reference}}{I_{Input}}$). Following is result metric of our method and compatitive algorithm:</p>
+<img src="/2019/10/26/Local%20Color%20Constancy/resultMetric.png" class="">
+<p>And here are more examples of our algorithm:</p>
+<img src="/2019/10/26/Local%20Color%20Constancy/moreResult.png" class="">
 <p>For more evaluation results, you could access supplementary <a target="_blank" rel="noopener" href="https://github.com/LiamLYJ/WB_tex/blob/master/Ver_final_after/sup.pdf">here</a>.</p>
-<h2 id="Citation"><a href="#Citation" class="headerlink" title="Citation"></a>Citation</h2><pre><code>@article&#123;liu2019self,
+<h2 id="Citation">Citation</h2>
+<pre><code>@article&#123;liu2019self,
     title=&#123;Self-adaptive Single and Multi-illuminant Estimation Framework based on Deep Learning&#125;,
     author=&#123;Liu, Yongjie and Shen, Sijie&#125;,
     journal=&#123;arXiv preprint arXiv:1902.04705&#125;,

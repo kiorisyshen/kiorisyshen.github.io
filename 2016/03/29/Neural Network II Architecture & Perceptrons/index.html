@@ -11,33 +11,57 @@ html.dataset.dark = localStorage.dark || prefersDarkMode.matches;
 toggle.addEventListener('click', () => {
 localStorage.dark = !(html.dataset.dark == 'true');
 html.dataset.dark = localStorage.dark;
-});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Neural Network II Architecture &amp; Perceptrons</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Neural Network II Architecture &amp; Perceptrons</h1><div class="post-meta">2016-03-29<span> | </span><span class="category"><a href="/categories/Machine-Learning/">Machine Learning</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 435</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 2</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/03/29/Neural Network II Architecture &amp; Perceptrons/" href="/2016/03/29/Neural%20Network%20II%20Architecture%20&amp;%20Perceptrons/#disqus_thread"></a><div class="post-content"><p>This is a note for learning Neural Network in Machine Learning based on this <a target="_blank" rel="noopener" href="https://www.coursera.org/course/neuralnets">course</a> on <a target="_blank" rel="noopener" href="https://www.coursera.org/">Coursera</a>.</p>
-<h2 id="An-overview-of-the-main-types-of-neural-network-architecture"><a href="#An-overview-of-the-main-types-of-neural-network-architecture" class="headerlink" title="An overview of the main types of neural network architecture"></a>An overview of the main types of neural network architecture</h2><h3 id="1-Feed-forward-neural-networks"><a href="#1-Feed-forward-neural-networks" class="headerlink" title="1. Feed-forward neural networks"></a>1. Feed-forward neural networks</h3><ul>
+});</script><meta name="generator" content="Hexo 6.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Neural Network II Architecture &amp; Perceptrons</h1><a id="logo" href="/.">Kio's Spot</a><p class="description">慢慢前进 Move forward gradually</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Neural Network II Architecture &amp; Perceptrons</h1><div class="post-meta">2016-03-29<span> | </span><span class="category"><a href="/categories/Machine-Learning/">Machine Learning</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 414</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 2</span><span class="post-meta-item-text"> Minutes</span></span></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/03/29/Neural Network II Architecture &amp; Perceptrons/" href="/2016/03/29/Neural%20Network%20II%20Architecture%20&amp;%20Perceptrons/#disqus_thread"></a><div class="post-content"><p>This is a note for learning Neural Network in Machine Learning based on this <a target="_blank" rel="noopener" href="https://www.coursera.org/course/neuralnets">course</a> on <a target="_blank" rel="noopener" href="https://www.coursera.org">Coursera</a>.</p>
+<h2 id="An-overview-of-the-main-types-of-neural-network-architecture">An overview of the main types of neural network architecture</h2>
+<h3 id="1-Feed-forward-neural-networks">1. Feed-forward neural networks</h3>
+<ul>
 <li>The commonest type of neural network in practical applications</li>
 <li>If there is more than one hidden layer, we call them “deep” neural networks</li>
-<li>The activities of the neurons in each layer are a non-linear function of the activities in the layer blow<br>![](Feed-forward NN.png)</li>
+<li>The activities of the neurons in each layer are a non-linear function of the activities in the layer blow</li>
 </ul>
-<h3 id="2-Recurrent-networks"><a href="#2-Recurrent-networks" class="headerlink" title="2. Recurrent networks"></a>2. Recurrent networks</h3><ul>
+
+<h3 id="2-Recurrent-networks">2. Recurrent networks</h3>
+<ul>
 <li>Have directed cycles in their connection graph</li>
 <li>Powerful and biologically realistic, but very difficult to train</li>
-<li>Recurrent nets with multiple hidden layers are just a special case that has some of the hidden-&gt;hidden connections missing compare to the general recurrent network<br>![](Recurrent networks.png)</li>
+<li>Recurrent nets with multiple hidden layers are just a special case that has some of the hidden-&gt;hidden connections missing compare to the general recurrent network</li>
+</ul>
+
+<ul>
 <li>It is very natural way to model sequential data</li>
-<li>Have the ability to remember information for quite a long time<br>![](Sequential framework.png)</li>
+<li>Have the ability to remember information for quite a long time</li>
+</ul>
+
+<ul>
 <li>An exciting example: Ilya Sutskever (2011), trained a special recurrent NN to predict the next character in a sequence, after training for a long time on a string of half a billion characters from English Wikipedia, and made it generate a new text by predicting the probability distribution for the next character and then sampling a character from this distribution. The result is quite reasonable with great syntax. <a target="_blank" rel="noopener" href="http://www.cs.toronto.edu/~ilya/rnn.html">Demo</a>.</li>
 </ul>
-<h2 id="Perceptrons"><a href="#Perceptrons" class="headerlink" title="Perceptrons"></a>Perceptrons</h2><h3 id="Standard-Perceptron-architecture"><a href="#Standard-Perceptron-architecture" class="headerlink" title="Standard Perceptron architecture"></a>Standard Perceptron architecture</h3><p>![](Perceptron architecture.png)</p>
+<h2 id="Perceptrons">Perceptrons</h2>
+<h3 id="Standard-Perceptron-architecture">Standard Perceptron architecture</h3>
+
 <ul>
 <li>So the perceptron is just learning last hidden layer’s weight. It is linear, and can not learn features.</li>
 <li>Perceptron uses binary threshold neuron as its final last output layer.</li>
 </ul>
-<h3 id="Learning-procedure"><a href="#Learning-procedure" class="headerlink" title="Learning procedure"></a>Learning procedure</h3><ul>
+<h3 id="Learning-procedure">Learning procedure</h3>
+<ul>
 <li>Pick training cases using any policy that ensures that every training case will keep getting picked.</li>
 <li>If the output unit is correct, leave its weights alone.</li>
 <li>If the output unit incorrectly outputs a zero, add the input vector to the weight vector.</li>
-<li>If the output unit incorrectly outputs a 1, subtract the input vector from the weight vector.<br>![](Perceptron cone.png)</li>
+<li>If the output unit incorrectly outputs a 1, subtract the input vector from the weight vector.</li>
 </ul>
-<h3 id="What-perceptrons-can’t-do"><a href="#What-perceptrons-can’t-do" class="headerlink" title="What perceptrons can’t do"></a>What perceptrons can’t do</h3><h4 id="First-example-XOR"><a href="#First-example-XOR" class="headerlink" title="First example: XOR"></a>First example: XOR</h4><p>Positive cases: (1,1) → 1; (0,0) → 1;<br>Negative cases: (1,0) → 0; (0,1) → 0;<br>![](Perceptron XOR.png)<br>Also it can be proved in a geometric view:<br>![](Perceptron XOR geo.png)</p>
-<h4 id="Second-example-Discriminating-patterns"><a href="#Second-example-Discriminating-patterns" class="headerlink" title="Second example: Discriminating patterns"></a>Second example: Discriminating patterns</h4><p>For two patterns like:<br>![](Perceptron patterns.png)<br>If we treat every individual pixel as an input, than pattern A and B’s output function are the same.<br>The reason is that, if we do not apply preprocessing on the input feature, the perceptron cannot learn translation of patterns.</p>
+
+<h3 id="What-perceptrons-can’t-do">What perceptrons can’t do</h3>
+<h4 id="First-example-XOR">First example: XOR</h4>
+<p>Positive cases: (1,1) → 1; (0,0) → 1;<br>
+Negative cases: (1,0) → 0; (0,1) → 0;</p>
+
+<p>Also it can be proved in a geometric view:</p>
+
+<h4 id="Second-example-Discriminating-patterns">Second example: Discriminating patterns</h4>
+<p>For two patterns like:</p>
+
+<p>If we treat every individual pixel as an input, than pattern A and B’s output function are the same.<br>
+The reason is that, if we do not apply preprocessing on the input feature, the perceptron cannot learn translation of patterns.</p>
 <p>So we must make NN to learn the inside features which is same to adding hidden units, but we need an efficient way to adapting all the weights.</p>
 </div><div class="tags"><a href="/tags/Learning note"><i class="fa fa-tag">Learning note</i></a><a href="/tags/Neural Network"><i class="fa fa-tag">Neural Network</i></a></div><div class="post-nav"><a class="pre" href="/2016/04/01/Neural%20Network%20III%20Backpropagation/">Neural Network III Backpropagation</a><a class="next" href="/2016/03/29/Neural%20Network%20I%20Overview/">Neural Network I Overview</a></div><link rel="stylesheet" type="text/css" href="https://unpkg.com/disqusjs@1.3/dist/disqusjs.css"><script type="text/javascript" src="https://unpkg.com/disqusjs@1.3/dist/disqus.js"></script><script type="text/javascript" id="disqus-count-script">$(function() {
   var xhr = new XMLHttpRequest();
